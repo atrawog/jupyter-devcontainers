@@ -1,0 +1,16 @@
+name: base
+category: testing
+channels:
+  - conda-forge
+  - default
+dependencies:
+  - ansible
+  - ansible-lint
+  - ansible-kernel
+  - pipenv
+  - molecule
+  - molecule-docker
+  - pytest-testinfra
+#  - pip:
+#    - molecule-qemu
+
