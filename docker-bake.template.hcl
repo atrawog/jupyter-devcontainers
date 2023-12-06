@@ -1,5 +1,5 @@
 group "default" {
-  targets = ["micromamba", "python", "jupyter", "ansible", "ai", "spatial", "devel"]
+  targets = ["micromamba", "python", "jupyter", "jupyter-ai", "jupyter-spatial", "jupyter-ansible", "jupyter-devel"]
 }
 
 target "micromamba" {
@@ -19,32 +19,26 @@ target "jupyter" {
   inherit = ["python"]
 }
 
-target "ansible" {
-  tags = ["ORG_PLACEHOLDER/ansible:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/ansible:DATE_TAG_PLACEHOLDER"]
-  target = "ansible"
-  inherit = ["jupyter"]
-}
-
-target "ai" {
+target "jupyter-ai" {
   tags = ["ORG_PLACEHOLDER/ai:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/ai:DATE_TAG_PLACEHOLDER"]
-  target = "ai"
+  target = "jupyter-ai"
   inherit = ["jupyter"]
 }
 
-target "spatial" {
+target "jupyter-spatial" {
   tags = ["ORG_PLACEHOLDER/spatial:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/spatial:DATE_TAG_PLACEHOLDER"]
-  target = "spatial"
-  inherit = ["ai"]
+  target = "jupyter-spatial"
+  inherit = ["jupyter-ai"]
 }
 
-target "testing" {
-  tags = ["ORG_PLACEHOLDER/testing:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/testing:DATE_TAG_PLACEHOLDER"]
-  target = "testing"
-  inherit = ["spatial"]
+target "jupyter-ansible" {
+  tags = ["ORG_PLACEHOLDER/ansible:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/ansible:DATE_TAG_PLACEHOLDER"]
+  target = "jupyter-ansible"
+  inherit = ["jupyter-spatial"]
 }
 
-target "devel" {
+target "jupyter-devel" {
   tags = ["ORG_PLACEHOLDER/devel:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/devel:DATE_TAG_PLACEHOLDER"]
-  target = "devel"
-  inherit = ["testing"]
+  target = "jupyter-devel"
+  inherit = ["jupyter-spatial"]
 }

@@ -41,10 +41,16 @@ RUN groupadd -g "${MAMBA_USER_GID}" "${MAMBA_USER}" && \
     useradd -m -u "${MAMBA_USER_ID}" -g "${MAMBA_USER_GID}" -s /bin/bash "${MAMBA_USER}"
 RUN mkdir -p "${MAMBA_ROOT_PREFIX}/environments" && \
     chown "${MAMBA_USER}:${MAMBA_USER}" "${MAMBA_ROOT_PREFIX}"
- 
+
+USER root
+ARG CONTAINER_WORKSPACE_FOLDER=/workspaces/jupyter-devcontainers
+RUN mkdir -p "${CONTAINER_WORKSPACE_FOLDER}"
+WORKDIR "${CONTAINER_WORKSPACE_FOLDER}"
+
 USER $MAMBA_USER
 RUN micromamba shell init --shell bash --prefix=$MAMBA_ROOT_PREFIX
 SHELL ["/bin/bash", "--rcfile", "/$MAMBA_USER/.bashrc", "-c"]
+
 
 
 FROM micromamba AS python
@@ -59,31 +65,28 @@ COPY --chown=$MAMBA_USER:$MAMBA_USER environments/env_jupyter.yml /opt/conda/env
 RUN --mount=type=cache,target=$MAMBA_ROOT_PREFIX/pkgs,id=mamba-pkgs  micromamba install -y -f /opt/conda/environments/env_jupyter.yml 
 
 
-FROM jupyter AS ansible
-
-COPY --chown=$MAMBA_USER:$MAMBA_USER environments/env_ansible.yml /opt/conda/environments/env_ansible.yml 
-RUN --mount=type=cache,target=$MAMBA_ROOT_PREFIX/pkgs,id=mamba-pkgs  micromamba install -y -f /opt/conda/environments/env_ansible.yml 
-
-
-FROM ansible AS ai
+FROM jupyter AS jupyter-ai
 
 COPY --chown=$MAMBA_USER:$MAMBA_USER environments/env_ai.yml /opt/conda/environments/env_ai.yml 
 RUN --mount=type=cache,target=$MAMBA_ROOT_PREFIX/pkgs,id=mamba-pkgs  micromamba install -y -f /opt/conda/environments/env_ai.yml 
 
 
-FROM ai AS spatial
+FROM jupyter-ai AS jupyter-spatial
 
 COPY --chown=$MAMBA_USER:$MAMBA_USER environments/env_spatial.yml /opt/conda/environments/env_spatial.yml 
 RUN --mount=type=cache,target=$MAMBA_ROOT_PREFIX/pkgs,id=mamba-pkgs  micromamba install -y -f /opt/conda/environments/env_spatial.yml 
 
-FROM spatial as devel
+
+FROM jupyter-spatial AS jupyter-ansible
+
+COPY --chown=$MAMBA_USER:$MAMBA_USER environments/env_ansible.yml /opt/conda/environments/env_ansible.yml 
+RUN --mount=type=cache,target=$MAMBA_ROOT_PREFIX/pkgs,id=mamba-pkgs  micromamba install -y -f /opt/conda/environments/env_ansible.yml 
+
+
+FROM jupyter-ansible as jupyter-devel
 
 USER root
-ARG CONTAINER_WORKSPACE_FOLDER=/workspaces/ansible-tljh
-RUN mkdir -p "${CONTAINER_WORKSPACE_FOLDER}"
-WORKDIR "${CONTAINER_WORKSPACE_FOLDER}"
-
-COPY environments/pkgs_devel.txt /opt/conda/environments/pkgs_devel.txt
+COPY --chown=$MAMBA_USER:$MAMBA_USER environments/pkgs_devel.txt /opt/conda/environments/pkgs_devel.txt
 RUN --mount=type=cache,target=/var/cache/apt,id=apt-deb12 apt-get update && xargs apt-get install -y < /opt/conda/environments/pkgs_devel.txt
 
 RUN touch /var/lib/dpkg/status && install -m 0755 -d /etc/apt/keyrings
@@ -105,14 +108,16 @@ RUN chmod +x /bin/fix-permissions.sh && \
     echo "/bin/fix-permissions.sh" >> /home/$MAMBA_USER/.bashrc && \
     echo "micromamba activate" >> /home/$MAMBA_USER/.bashrc
 
-ARG DOCKER_GID=999
-ARG KVM_GID=992
+#ARG DOCKER_GID=999
+#ARG KVM_GID=992
 
-RUN getent group ${DOCKER_GID} || groupmod -g ${DOCKER_GID} docker
-RUN usermod -aG docker $MAMBA_USER
-RUN groupadd -g ${KVM_GID} kvm && usermod -aG kvm $MAMBA_USER
+#RUN getent group ${DOCKER_GID} || groupmod -g ${DOCKER_GID} docker
+#RUN usermod -aG docker $MAMBA_USER
+#RUN groupadd -g ${KVM_GID} kvm && usermod -aG kvm $MAMBA_USER
 
 USER $MAMBA_USER
 
 RUN ansible-galaxy install geerlingguy.docker
 RUN pip install molecule-qemu
+
+USER $MAMBA_USER

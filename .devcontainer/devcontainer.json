@@ -12,8 +12,8 @@
 			// "NEW_MAMBA_USER": "jovian",
 			// "NEW_MAMBA_USER_ID": "1010",
 			// "NEW_MAMBA_USER_GID": "1010",
-			"DOCKER_GID": "965",
-			"KVM_GID": "992"
+			// "DOCKER_GID": "965",
+			// "KVM_GID": "992"
 		},
 		"cacheFrom": [
 			"type=registry,ref=docker.io/atrawog/devel:latest"
@@ -59,6 +59,9 @@
 		"-p=8000:8000",
 		"-p=8443:8443",
 		"--ulimit", "nofile=1048576:1048576"
-
-	]
+	],
+	"containerEnv": {
+		"KVM_DEVICE": "/dev/kvm",
+		"DOCKER_SOCKET": "/var/run/docker.sock"
+	}
 }
