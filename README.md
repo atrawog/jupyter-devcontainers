@@ -47,3 +47,36 @@ This repository hosts a suite of Docker containers built on Micromamba, designed
 
 - Edit Dockerfiles to customize the containers.
 - Modify Ansible playbooks and Molecule tests as per your project needs.
+
+## Build and Deployment
+
+### Makefile Overview
+
+The Makefile in this repository contains scripts for building and deploying Docker containers. Key components include:
+
+- **Variables**: Defines shell, organization, tags, Docker builder, architecture, and Micromamba details.
+- **Micromamba Installation**: Includes commands to install Micromamba for different architectures.
+- **Docker Build**: Automates the generation of `docker-bake.hcl` from a template and uses Docker Buildx for building images.
+- **Docker Push**: Simplifies pushing built images to a Docker registry.
+
+### Building Containers
+
+- Run `make docker-build` to build the Docker containers based on the configurations specified in the Makefile.
+
+### Pushing Containers to Registry
+
+- Run `make docker-push` to push the built containers to the specified Docker registry.
+
+## Devcontainer Configuration
+
+The `devcontainer.json` file configures the development environment for use in Visual Studio Code's Devcontainer feature. Key configurations include:
+
+- **Container Environment**: Sets the timezone and workspace folder.
+- **Build Configuration**: Specifies Docker build arguments, context, and caching.
+- **Extensions**: A list of Visual Studio Code extensions that are automatically installed in the devcontainer.
+- **Remote User**: Defines the default user within the container.
+- **Settings**: Configures Visual Studio Code settings such as the integrated terminal, file auto-save, Python paths, and Jupyter settings.
+- **Mounts**: Defines bind mounts for Docker socket and cache directory.
+- **Run Arguments**: Additional Docker run arguments like device access and port mapping.
+
+This configuration enhances the development experience by providing a fully set-up environment with all necessary tools and settings.
