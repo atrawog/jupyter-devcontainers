@@ -108,16 +108,7 @@ RUN chmod +x /bin/fix-permissions.sh && \
     echo "/bin/fix-permissions.sh" >> /home/$MAMBA_USER/.bashrc && \
     echo "micromamba activate" >> /home/$MAMBA_USER/.bashrc
 
-#ARG DOCKER_GID=999
-#ARG KVM_GID=992
-
-#RUN getent group ${DOCKER_GID} || groupmod -g ${DOCKER_GID} docker
-#RUN usermod -aG docker $MAMBA_USER
-#RUN groupadd -g ${KVM_GID} kvm && usermod -aG kvm $MAMBA_USER
-
 USER $MAMBA_USER
 
 RUN ansible-galaxy install geerlingguy.docker
 RUN pip install molecule-qemu
-
-USER $MAMBA_USER

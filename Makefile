@@ -8,7 +8,6 @@ DATE_TAG := $(shell date +%Y%m%d)
 BUILDER := default
 
 # Path to the Docker Bake template and output file
-STAGES := micromamba python jupyter jupyter-ai jupyter-spatial jupyter-ansible jupyter-devel
 BAKE_TEMPLATE := docker-bake.template.hcl
 BAKE_FILE := docker-bake.hcl
 
@@ -64,7 +63,6 @@ docker-build:
 # Push task
 .PHONY: docker-push
 docker-push:
-	@$(foreach stage,$(STAGES), \
-		docker push $(ORGANIZATION)/$(stage):$(DEFAULT_TAG); \
-		docker push $(ORGANIZATION)/$(stage):$(DATE_TAG);)
+	@docker images $(ORGANIZATION)/* --format "{{.Repository}}:{{.Tag}}" | xargs -I {} docker push {}
+
 
