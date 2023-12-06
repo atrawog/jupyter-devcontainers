@@ -20,25 +20,25 @@ target "jupyter" {
 }
 
 target "jupyter-ai" {
-  tags = ["ORG_PLACEHOLDER/ai:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/ai:DATE_TAG_PLACEHOLDER"]
+  tags = ["ORG_PLACEHOLDER/jupyter-ai:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/jupyter-ai:DATE_TAG_PLACEHOLDER"]
   target = "jupyter-ai"
   inherit = ["jupyter"]
 }
 
 target "jupyter-spatial" {
-  tags = ["ORG_PLACEHOLDER/spatial:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/spatial:DATE_TAG_PLACEHOLDER"]
+  tags = ["ORG_PLACEHOLDER/jupyter-spatial:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/jupyter-spatial:DATE_TAG_PLACEHOLDER"]
   target = "jupyter-spatial"
   inherit = ["jupyter-ai"]
 }
 
 target "jupyter-ansible" {
-  tags = ["ORG_PLACEHOLDER/ansible:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/ansible:DATE_TAG_PLACEHOLDER"]
+  tags = ["ORG_PLACEHOLDER/jupyter-ansible:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/jupyter-ansible:DATE_TAG_PLACEHOLDER"]
   target = "jupyter-ansible"
   inherit = ["jupyter-spatial"]
 }
 
 target "jupyter-devel" {
-  tags = ["ORG_PLACEHOLDER/devel:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/devel:DATE_TAG_PLACEHOLDER"]
+  tags = ["ORG_PLACEHOLDER/jupyter-devel:DEFAULT_TAG_PLACEHOLDER", "ORG_PLACEHOLDER/jupyter-devel:DATE_TAG_PLACEHOLDER"]
   target = "jupyter-devel"
   inherit = ["jupyter-spatial"]
 }

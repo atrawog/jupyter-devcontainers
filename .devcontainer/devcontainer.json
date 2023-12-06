@@ -14,7 +14,7 @@
 			// "NEW_MAMBA_USER_GID": "1010",
 		},
 		"cacheFrom": [
-			"type=registry,ref=docker.io/atrawog/devel:latest"
+			"type=registry,ref=docker.io/atrawog/jupyter-devel:latest"
 		]
 	},
 	"extensions": [	
